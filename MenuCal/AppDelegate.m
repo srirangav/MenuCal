@@ -4,6 +4,7 @@
  History:
  
  v. 1.0.0 (11/05/2018) - Initial version
+ v. 1.0.1 (11/07/2018) - Save user preferences
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -28,6 +29,19 @@
 
 #import "AppDelegate.h"
 
+/* Constants */
+
+/* User preferences */
+
+NSString *gPrefShowDate = @"ShowDate";
+NSString *gPrefShowDateShortStyle = @"ShowDateShortStyle";
+NSString *gPrefShowDay = @"ShowDay";
+NSString *gPrefShowTime = @"ShowTime";
+
+/* Menu image file name */
+
+NSString *gMenuImage = @"MenuCal.png";
+
 @interface AppDelegate ()
 
 @property (weak) IBOutlet NSWindow *window;
@@ -39,6 +53,8 @@
 - (void)applicationDidFinishLaunching:
     (NSNotification *)aNotification
 {
+    NSUserDefaults* defaults = nil;
+    
     /*
         Create the status item and set its icon:
         http://preserve.mactech.com/articles/mactech/Vol.22/22.02/Menulet/index.html
@@ -49,15 +65,20 @@
     [self.statusItem setHighlightMode: YES];
     [self.statusItem setMenu: MCMenu];
 
+    /* Get the user's preferences for displaying the date, day, and time */
+
+    defaults = [NSUserDefaults standardUserDefaults];
+    
+    showDate = [defaults boolForKey: gPrefShowDate];
+    showDateShortStyle = [defaults boolForKey: gPrefShowDateShortStyle];
+    showDay = [defaults boolForKey: gPrefShowDay];
+    showTime = [defaults boolForKey: gPrefShowTime];
+    
     /*
-        Configure the show date and time menu items to false initially, but
-        configure showColon to true so that the colon is initially seen
+        Configure showColon to true so that the colon is initially seen when the
+        time is displayed in the menu bar
      */
     
-    showDate = FALSE;
-    showDateShortStyle = FALSE;
-    showDay = FALSE;
-    showTime = FALSE;
     showColon = TRUE;
     
     /* Set the actions for show date and show time menu items */
@@ -68,17 +89,38 @@
     [MCMenuItemShowTimeInMenuBar setAction:@selector(actionShowTime:)];
 
     /*
-        Enable the menu bar items (except for the date):
-        https://stackoverflow.com/questions/4524294/disabled-nsmenuitem#4683010
-     
-        NOTE: the menu is marked as not auto-enable in MainMenu.xib
+        Set the state of (checkmark) of the menu items based on the user's
+        preferences
      */
     
+    [MCMenuItemShowDateInMenuBar setState: (showDate ? NSOnState : NSOffState)];
+    [MCMenuItemShowDateShortStyleInMenuBar setState: (showDateShortStyle ? NSOnState : NSOffState)];
+    [MCMenuItemShowDayInMenuBar setState: (showDay ? NSOnState : NSOffState)];
+    [MCMenuItemShowTimeInMenuBar setState: (showTime ? NSOnState : NSOffState)];
+
+    /*
+        Enable / disable the menu bar items:
+        https://stackoverflow.com/questions/4524294/disabled-nsmenuitem#4683010
+     
+        Note: this works b/c the menu is marked as not auto-enable in MainMenu.xib
+
+        Rules:
+        1. "Show Date", "Show Time", and "Quit" should always be enabled.
+        2. "Show Day" and "Short Style" should be enabled only if the user wants the
+           date to be shown in the menu bar
+        3. The static date should always be disabled.
+     */
+
+    
     [MCMenuItemShowDateInMenuBar setEnabled:TRUE];
-    [MCMenuItemShowDayInMenuBar setEnabled:TRUE];
     [MCMenuItemShowTimeInMenuBar setEnabled:TRUE];
     [MCMenuItemQuit setEnabled: TRUE];
+
     [MCMenuItemDate setEnabled: FALSE];
+    
+    [MCMenuItemShowDayInMenuBar setEnabled: showDate];
+    [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
+
     
     /* Enable the update timer */
     
@@ -148,6 +190,11 @@
     /* toggle the setting for whether the date should be shown in the menubar */
 
     showDate = !showDate;
+
+    /* update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: showDate
+                                            forKey: gPrefShowDate];
     
     /*
         Show a checkmark before this menu item if the date should be
@@ -181,6 +228,11 @@
     
     showDateShortStyle = !showDateShortStyle;
 
+    /* update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: showDateShortStyle
+                                            forKey: gPrefShowDateShortStyle];
+
     /*
      Show a checkmark before this menu item if the date should be
      shown in short style:
@@ -202,7 +254,12 @@
     /* toggle the setting for whether the day should be shown in the menubar */
     
     showDay = !showDay;
+
+    /* update the user's preferences */
     
+    [[NSUserDefaults standardUserDefaults] setBool: showDay
+                                            forKey: gPrefShowDay];
+
     /*
      Show a checkmark before this menu item if the date should be
      shown in the menubar:
@@ -223,6 +280,11 @@
     /* toggle the setting for whether the time should be shown in the menubar */
     
     showTime = !showTime;
+
+    /* update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: showTime
+                                            forKey: gPrefShowTime];
 
     /*
         Show a checkmark before this menu item if the time should be
@@ -258,7 +320,7 @@
      */
     
     if (showDate == FALSE && showTime == FALSE) {
-        [self.statusItem setImage: [NSImage imageNamed: @"MenuCal.png"]];
+        [self.statusItem setImage: [NSImage imageNamed: gMenuImage]];
         [self.statusItem.image setTemplate: YES];
         [self.statusItem setTitle: nil];
         return;
@@ -314,7 +376,7 @@
         hour = [components hour];
         minute = [components minute];
             
-        [dateStr appendFormat: @"%02ld%c%02ld",
+        [dateStr appendFormat: @"%2ld%c%02ld",
                                 (long)hour,
                                 (showColon ? ':' : ' '),
                                 (long)minute];
