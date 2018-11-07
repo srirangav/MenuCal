@@ -1,7 +1,7 @@
 README
 ------
 
-MenuCale v1.0.0
+MenuCal v1.0.0
 By Sriranga Veeraraghavan <ranga@calalum.org>
 
 MenuCal is a menubar calendar application for MacOSX.
