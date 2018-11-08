@@ -115,13 +115,12 @@ NSString *gMenuImage = @"MenuCal.png";
     [MCMenuItemShowDateInMenuBar setEnabled:TRUE];
     [MCMenuItemShowTimeInMenuBar setEnabled:TRUE];
     [MCMenuItemQuit setEnabled: TRUE];
-
-    [MCMenuItemDate setEnabled: FALSE];
     
     [MCMenuItemShowDayInMenuBar setEnabled: showDate];
     [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
 
-    
+    [MCMenuItemDate setEnabled: FALSE];
+
     /* Enable the update timer */
     
     [self actionTimer];
@@ -166,15 +165,16 @@ NSString *gMenuImage = @"MenuCal.png";
     /* If time and date are both shown, the duration should be 1.5s.
        If only time is shown , it should be 2s. */
     
-    if (showTime) {
+    if (showTime)
+    {
         duration = (showDate ? 1.5 : 2.0);
     }
 
-    /* update the menu bar */
+    /* Update the menu bar */
     
     [self updateStatusItemTitle];
     
-    /* start a new timer */
+    /* Start a new timer */
     
     MCTimer = [NSTimer scheduledTimerWithTimeInterval: duration
                                                target: self
@@ -187,11 +187,11 @@ NSString *gMenuImage = @"MenuCal.png";
 
 - (void)actionShowDate: (id)sender
 {
-    /* toggle the setting for whether the date should be shown in the menubar */
+    /* Toggle the setting for whether the date should be shown in the menubar */
 
     showDate = !showDate;
 
-    /* update the user's preferences */
+    /* Update the user's preferences */
     
     [[NSUserDefaults standardUserDefaults] setBool: showDate
                                             forKey: gPrefShowDate];
@@ -212,7 +212,7 @@ NSString *gMenuImage = @"MenuCal.png";
     [MCMenuItemShowDayInMenuBar setEnabled: showDate];
     [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
     
-    /* update the title of this menu item by firing the current timer */
+    /* Update the title of this menu item by firing the current timer */
     
     [MCTimer fire];
  }
@@ -224,25 +224,25 @@ NSString *gMenuImage = @"MenuCal.png";
 
 - (void)actionShowDateShortStyle:(id)sender
 {
-    /* toggle the setting for whether the day should be shown in the menubar */
+    /* Toggle the setting for whether the day should be shown in the menubar */
     
     showDateShortStyle = !showDateShortStyle;
 
-    /* update the user's preferences */
+    /* Update the user's preferences */
     
     [[NSUserDefaults standardUserDefaults] setBool: showDateShortStyle
                                             forKey: gPrefShowDateShortStyle];
 
     /*
-     Show a checkmark before this menu item if the date should be
-     shown in short style:
-     https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
+        Show a checkmark before this menu item if the date should be
+        shown in short style:
+        https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
      */
     
     [MCMenuItemShowDateShortStyleInMenuBar setState:
      (showDateShortStyle ? NSOnState : NSOffState)];
     
-    /* update the title of this menu item by firing the current timer */
+    /* Update the title of this menu item by firing the current timer */
     
     [MCTimer fire];
 }
@@ -251,24 +251,24 @@ NSString *gMenuImage = @"MenuCal.png";
 
 - (void)actionShowDay: (id)sender
 {
-    /* toggle the setting for whether the day should be shown in the menubar */
+    /* Toggle the setting for whether the day should be shown in the menubar */
     
     showDay = !showDay;
 
-    /* update the user's preferences */
+    /* Update the user's preferences */
     
     [[NSUserDefaults standardUserDefaults] setBool: showDay
                                             forKey: gPrefShowDay];
 
     /*
-     Show a checkmark before this menu item if the date should be
-     shown in the menubar:
-     https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
+        Show a checkmark before this menu item if the date should be
+        shown in the menubar:
+        https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
      */
     
     [MCMenuItemShowDayInMenuBar setState: (showDay ? NSOnState : NSOffState)];
     
-    /* update the title of this menu item by firing the current timer */
+    /* Update the title of this menu item by firing the current timer */
     
     [MCTimer fire];
 }
@@ -277,11 +277,11 @@ NSString *gMenuImage = @"MenuCal.png";
 
 - (void)actionShowTime: (id)sender
 {
-    /* toggle the setting for whether the time should be shown in the menubar */
+    /* Toggle the setting for whether the time should be shown in the menubar */
     
     showTime = !showTime;
 
-    /* update the user's preferences */
+    /* Update the user's preferences */
     
     [[NSUserDefaults standardUserDefaults] setBool: showTime
                                             forKey: gPrefShowTime];
@@ -294,7 +294,7 @@ NSString *gMenuImage = @"MenuCal.png";
     
     [MCMenuItemShowTimeInMenuBar setState: (showTime ? NSOnState : NSOffState)];
     
-    /* update the title of this menu item by firing the current timer */
+    /* Update the title of this menu item by firing the current timer */
 
     [MCTimer fire];
 }
@@ -319,7 +319,8 @@ NSString *gMenuImage = @"MenuCal.png";
         use an icon and return.
      */
     
-    if (showDate == FALSE && showTime == FALSE) {
+    if (showDate == FALSE && showTime == FALSE)
+    {
         [self.statusItem setImage: [NSImage imageNamed: gMenuImage]];
         [self.statusItem.image setTemplate: YES];
         [self.statusItem setTitle: nil];
@@ -342,11 +343,13 @@ NSString *gMenuImage = @"MenuCal.png";
 
     /* If the date is to be shown, get it using a date formatter */
     
-    if (showDate) {
+    if (showDate)
+    {
 
-        /* if the day is to be shown, get it using a date formatter */
+        /* If the day is to be shown, get it using a date formatter */
         
-        if (showDay) {
+        if (showDay)
+        {
             dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"EEE"];
             [dateStr appendString: [dateFormatter stringFromDate: currentDate]];
@@ -364,7 +367,8 @@ NSString *gMenuImage = @"MenuCal.png";
 
     /* If the time is to be shown, display it */
     
-    if (showTime) {
+    if (showTime)
+    {
         /*
             Get the current time as hours and minutes:
             https://stackoverflow.com/questions/2927028/how-do-i-get-hour-and-minutes-from-nsdate#2927074
@@ -386,7 +390,7 @@ NSString *gMenuImage = @"MenuCal.png";
         showColon = !showColon;
     }
     
-    /* update the menubar */
+    /* Update the menubar */
     
     [self.statusItem setTitle: dateStr];
 }
@@ -399,17 +403,18 @@ NSString *gMenuImage = @"MenuCal.png";
     NSMutableString *dateStr = nil;
     NSDateFormatter *dateFormatter = nil;
     
-    /* get the current date */
+    /* Get the current date */
     
     currentDate = [NSDate date];
 
-    /* initialize the string that will hold the date */
+    /* Initialize the string that will hold the date */
     
     dateStr = [NSMutableString stringWithString:@""];
 
-    /* if the day is to be shown, get it using a date formatter */
+    /* If the day is to be shown, get it using a date formatter */
 
-    if (showDay) {
+    if (showDay)
+    {
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"EEE"];
         [dateStr appendString: [dateFormatter stringFromDate: currentDate]];
