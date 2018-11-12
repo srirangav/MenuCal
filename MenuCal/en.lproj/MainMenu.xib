@@ -17,11 +17,13 @@
                 <outlet property="MCMenu" destination="2qd-Hm-EeB" id="1Hd-zw-1k5"/>
                 <outlet property="MCMenuItemDate" destination="ycX-ii-a3I" id="NJ6-sO-Tyh"/>
                 <outlet property="MCMenuItemDatePicker" destination="LhV-Ap-Lao" id="vFA-HC-S9t"/>
+                <outlet property="MCMenuItemLaunchAtLogin" destination="eHh-8C-ren" id="vd5-sv-Pf0"/>
                 <outlet property="MCMenuItemQuit" destination="BUF-TB-kD0" id="5gh-eQ-75v"/>
                 <outlet property="MCMenuItemShowDateInMenuBar" destination="EFp-49-JMA" id="hmy-dh-fUw"/>
                 <outlet property="MCMenuItemShowDateShortStyleInMenuBar" destination="LXt-5P-rG6" id="Uu1-Tj-EYl"/>
                 <outlet property="MCMenuItemShowDayInMenuBar" destination="oHt-ii-Zfe" id="CCk-PQ-Bsp"/>
                 <outlet property="MCMenuItemShowTimeInMenuBar" destination="DtR-ip-7Rs" id="3mN-hz-M4x"/>
+                <outlet property="MCMenuItemShowYearInMenuBar" destination="SJB-QS-nDe" id="JJO-la-9Ok"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -44,11 +46,18 @@
                 <menuItem title="Show Day" id="oHt-ii-Zfe">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
+                <menuItem title="Show Year" id="SJB-QS-nDe">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
                 <menuItem isSeparatorItem="YES" id="ZDb-N8-Js5"/>
                 <menuItem title="Show Time" id="DtR-ip-7Rs">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="t9J-OM-EaW"/>
+                <menuItem title="Start on Login" id="eHh-8C-ren">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="tgu-jX-hC4"/>
                 <menuItem title="Quit" allowsKeyEquivalentWhenHidden="YES" id="BUF-TB-kD0">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>

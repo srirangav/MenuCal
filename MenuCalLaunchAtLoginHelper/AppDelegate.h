@@ -1,10 +1,9 @@
 /*
- MenuCal - AppDelegate.h
+ MenuCalLaunchAtLoginHelper - AppDelegate.h
  
  History:
  
- v. 1.0.0 (11/05/2018) - Initial version
- v. 1.0.1 (11/12/2018) - Add support for launching at login time
+ v. 1.0.0 (11/12/2018) - Initial version
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -25,43 +24,12 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
-*/
+ */
 
 #import <Cocoa/Cocoa.h>
-#import "MenuCalDatePicker.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
-{
-    IBOutlet NSMenu *MCMenu;
-    IBOutlet NSMenuItem *MCMenuItemDatePicker;
-    IBOutlet NSMenuItem *MCMenuItemQuit;
-    IBOutlet NSMenuItem *MCMenuItemDate;
-    IBOutlet NSMenuItem *MCMenuItemShowDateInMenuBar;
-    IBOutlet NSMenuItem *MCMenuItemShowDateShortStyleInMenuBar;
-    IBOutlet NSMenuItem *MCMenuItemShowDayInMenuBar;
-    IBOutlet NSMenuItem *MCMenuItemShowYearInMenuBar;
-    IBOutlet NSMenuItem *MCMenuItemShowTimeInMenuBar;
-    IBOutlet NSMenuItem *MCMenuItemLaunchAtLogin;
-    IBOutlet MenuCalDatePicker *MCDatePicker;
-    NSTimer *MCTimer;
-    BOOL showDate;
-    BOOL showDateShortStyle;
-    BOOL showDay;
-    BOOL showYear;
-    BOOL showTime;
-    BOOL showColon;
-    BOOL launchAtLogin;
-}
 
-- (void) actionTimer;
-- (void) actionShowDate: (id)sender;
-- (void) actionShowDateShortStyle: (id)sender;
-- (void) actionShowDay: (id)sender;
-- (void) actionShowYear: (id)sender;
-- (void) actionShowTime: (id)sender;
-- (void) actionLaunchAtLogin: (id)sender;
-- (void) updateStatusItemTitle;
-- (void) updateDate;
 
 @end
 

@@ -12,8 +12,27 @@
 		2627539E218D1AF100B38AE0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2627539C218D1AF100B38AE0 /* MainMenu.xib */; };
 		262753A1218D1AF100B38AE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 262753A0218D1AF100B38AE0 /* main.m */; };
 		262753AA218D1D3B00B38AE0 /* MenuCal.png in Resources */ = {isa = PBXBuildFile; fileRef = 262753A9218D1D3B00B38AE0 /* MenuCal.png */; };
+		26F373492194F77900B38AE0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F373482194F77900B38AE0 /* AppDelegate.m */; };
+		26F3734B2194F77900B38AE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F3734A2194F77900B38AE0 /* Assets.xcassets */; };
+		26F3734E2194F77900B38AE0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 26F3734C2194F77900B38AE0 /* MainMenu.xib */; };
+		26F373512194F77900B38AE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F373502194F77900B38AE0 /* main.m */; };
+		26F373572194F7CD00B38AE0 /* MenuCalLaunchAtLoginHelper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 26F373452194F77900B38AE0 /* MenuCalLaunchAtLoginHelper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		26F3735A2195125500B38AE0 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26F373592195125500B38AE0 /* ServiceManagement.framework */; };
 		26FA81F4218D7D1100B38AE0 /* MenuCalDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 26FA81F3218D7D1100B38AE0 /* MenuCalDatePicker.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		26F373562194F7AE00B38AE0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				26F373572194F7CD00B38AE0 /* MenuCalLaunchAtLoginHelper.app in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		26275394218D1AF000B38AE0 /* MenuCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -25,12 +44,29 @@
 		262753A2218D1AF100B38AE0 /* MenuCal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuCal.entitlements; sourceTree = "<group>"; };
 		262753A8218D1B6000B38AE0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		262753A9218D1D3B00B38AE0 /* MenuCal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuCal.png; sourceTree = "<group>"; };
+		26F373452194F77900B38AE0 /* MenuCalLaunchAtLoginHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuCalLaunchAtLoginHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		26F373472194F77900B38AE0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		26F373482194F77900B38AE0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		26F3734A2194F77900B38AE0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		26F3734F2194F77900B38AE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		26F373502194F77900B38AE0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		26F373522194F77900B38AE0 /* MenuCalLaunchAtLoginHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuCalLaunchAtLoginHelper.entitlements; sourceTree = "<group>"; };
+		26F373592195125500B38AE0 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		26F3735B2195177700B38AE0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		26FA81F2218D7D1100B38AE0 /* MenuCalDatePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuCalDatePicker.h; sourceTree = "<group>"; };
 		26FA81F3218D7D1100B38AE0 /* MenuCalDatePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuCalDatePicker.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		26275391218D1AF000B38AE0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26F3735A2195125500B38AE0 /* ServiceManagement.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		26F373422194F77900B38AE0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -44,7 +80,9 @@
 			isa = PBXGroup;
 			children = (
 				26275396218D1AF000B38AE0 /* MenuCal */,
+				26F373462194F77900B38AE0 /* MenuCalLaunchAtLoginHelper */,
 				26275395218D1AF000B38AE0 /* Products */,
+				26F373582195125500B38AE0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -52,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				26275394218D1AF000B38AE0 /* MenuCal.app */,
+				26F373452194F77900B38AE0 /* MenuCalLaunchAtLoginHelper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +112,28 @@
 			path = MenuCal;
 			sourceTree = "<group>";
 		};
+		26F373462194F77900B38AE0 /* MenuCalLaunchAtLoginHelper */ = {
+			isa = PBXGroup;
+			children = (
+				26F373472194F77900B38AE0 /* AppDelegate.h */,
+				26F373482194F77900B38AE0 /* AppDelegate.m */,
+				26F3734A2194F77900B38AE0 /* Assets.xcassets */,
+				26F3734C2194F77900B38AE0 /* MainMenu.xib */,
+				26F3734F2194F77900B38AE0 /* Info.plist */,
+				26F373502194F77900B38AE0 /* main.m */,
+				26F373522194F77900B38AE0 /* MenuCalLaunchAtLoginHelper.entitlements */,
+			);
+			path = MenuCalLaunchAtLoginHelper;
+			sourceTree = "<group>";
+		};
+		26F373582195125500B38AE0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				26F373592195125500B38AE0 /* ServiceManagement.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,6 +144,7 @@
 				26275390218D1AF000B38AE0 /* Sources */,
 				26275391218D1AF000B38AE0 /* Frameworks */,
 				26275392218D1AF000B38AE0 /* Resources */,
+				26F373562194F7AE00B38AE0 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -91,6 +153,23 @@
 			name = MenuCal;
 			productName = MenuCal;
 			productReference = 26275394218D1AF000B38AE0 /* MenuCal.app */;
+			productType = "com.apple.product-type.application";
+		};
+		26F373442194F77900B38AE0 /* MenuCalLaunchAtLoginHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 26F373552194F77900B38AE0 /* Build configuration list for PBXNativeTarget "MenuCalLaunchAtLoginHelper" */;
+			buildPhases = (
+				26F373412194F77900B38AE0 /* Sources */,
+				26F373422194F77900B38AE0 /* Frameworks */,
+				26F373432194F77900B38AE0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MenuCalLaunchAtLoginHelper;
+			productName = MenuCalLaunchAtLoginHelper;
+			productReference = 26F373452194F77900B38AE0 /* MenuCalLaunchAtLoginHelper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -103,6 +182,9 @@
 				ORGANIZATIONNAME = "Sriranga Veeraraghavan";
 				TargetAttributes = {
 					26275393218D1AF000B38AE0 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					26F373442194F77900B38AE0 = {
 						CreatedOnToolsVersion = 10.1;
 					};
 				};
@@ -121,6 +203,7 @@
 			projectRoot = "";
 			targets = (
 				26275393218D1AF000B38AE0 /* MenuCal */,
+				26F373442194F77900B38AE0 /* MenuCalLaunchAtLoginHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -133,6 +216,15 @@
 				2627539B218D1AF100B38AE0 /* Assets.xcassets in Resources */,
 				262753AA218D1D3B00B38AE0 /* MenuCal.png in Resources */,
 				2627539E218D1AF100B38AE0 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		26F373432194F77900B38AE0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26F3734B2194F77900B38AE0 /* Assets.xcassets in Resources */,
+				26F3734E2194F77900B38AE0 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +241,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		26F373412194F77900B38AE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26F373512194F77900B38AE0 /* main.m in Sources */,
+				26F373492194F77900B38AE0 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
@@ -156,6 +257,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				262753A8218D1B6000B38AE0 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		26F3734C2194F77900B38AE0 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				26F3735B2195177700B38AE0 /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -279,8 +388,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MenuCal/MenuCal.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = CLN8R9E6QM;
 				INFOPLIST_FILE = MenuCal/Info.plist;
@@ -300,8 +409,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MenuCal/MenuCal.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = CLN8R9E6QM;
 				INFOPLIST_FILE = MenuCal/Info.plist;
@@ -313,6 +422,50 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.calalum.ranga.MenuCal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+			};
+			name = Release;
+		};
+		26F373532194F77900B38AE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MenuCalLaunchAtLoginHelper/MenuCalLaunchAtLoginHelper.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = CLN8R9E6QM;
+				INFOPLIST_FILE = MenuCalLaunchAtLoginHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = org.calalum.ranga.MenuCalLaunchAtLoginHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		26F373542194F77900B38AE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MenuCalLaunchAtLoginHelper/MenuCalLaunchAtLoginHelper.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = CLN8R9E6QM;
+				INFOPLIST_FILE = MenuCalLaunchAtLoginHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = org.calalum.ranga.MenuCalLaunchAtLoginHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -333,6 +486,15 @@
 			buildConfigurations = (
 				262753A6218D1AF100B38AE0 /* Debug */,
 				262753A7218D1AF100B38AE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		26F373552194F77900B38AE0 /* Build configuration list for PBXNativeTarget "MenuCalLaunchAtLoginHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				26F373532194F77900B38AE0 /* Debug */,
+				26F373542194F77900B38AE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

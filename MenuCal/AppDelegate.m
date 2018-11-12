@@ -5,6 +5,7 @@
  
  v. 1.0.0 (11/05/2018) - Initial version
  v. 1.0.1 (11/07/2018) - Save user preferences
+ v. 1.0.2 (11/12/2018) - Add support for launching at login time
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -27,6 +28,7 @@
  DEALINGS IN THE SOFTWARE.
  */
 
+#import <ServiceManagement/ServiceManagement.h>
 #import "AppDelegate.h"
 
 /* Constants */
@@ -36,11 +38,19 @@
 NSString *gPrefShowDate = @"ShowDate";
 NSString *gPrefShowDateShortStyle = @"ShowDateShortStyle";
 NSString *gPrefShowDay = @"ShowDay";
+NSString *gPrefShowYear = @"ShowYear";
 NSString *gPrefShowTime = @"ShowTime";
+NSString *gPrefLaunchAtLogin = @"LaunchAtLogin";
 
 /* Menu image file name */
 
 NSString *gMenuImage = @"MenuCal.png";
+
+/* Help App Bundle Name */
+
+NSString *gHelperAppBundle = @"org.calalum.ranga.MenuCalLaunchAtLoginHelper";
+
+NSString *gMsgTerminate = @"Terminate";
 
 @interface AppDelegate ()
 
@@ -53,11 +63,16 @@ NSString *gMenuImage = @"MenuCal.png";
 - (void)applicationDidFinishLaunching:
     (NSNotification *)aNotification
 {
+    NSArray *apps = nil;
     NSUserDefaults* defaults = nil;
+    BOOL startedAtLogin = FALSE;
     
     /*
         Create the status item and set its icon:
         http://preserve.mactech.com/articles/mactech/Vol.22/22.02/Menulet/index.html
+     
+        See also:
+        http://www.sonsothunder.com/devres/livecode/tutorials/StatusMenu.html
      */
     
     self.statusItem = [[NSStatusBar systemStatusBar]
@@ -72,7 +87,9 @@ NSString *gMenuImage = @"MenuCal.png";
     showDate = [defaults boolForKey: gPrefShowDate];
     showDateShortStyle = [defaults boolForKey: gPrefShowDateShortStyle];
     showDay = [defaults boolForKey: gPrefShowDay];
+    showYear = [defaults boolForKey: gPrefShowYear];
     showTime = [defaults boolForKey: gPrefShowTime];
+    launchAtLogin = [defaults boolForKey: gPrefLaunchAtLogin];
     
     /*
         Configure showColon to true so that the colon is initially seen when the
@@ -83,11 +100,14 @@ NSString *gMenuImage = @"MenuCal.png";
     
     /* Set the actions for show date and show time menu items */
     
-    [MCMenuItemShowDateInMenuBar setAction:@selector(actionShowDate:)];
-    [MCMenuItemShowDateShortStyleInMenuBar setAction:@selector(actionShowDateShortStyle:)];
-    [MCMenuItemShowDayInMenuBar setAction:@selector(actionShowDay:)];
-    [MCMenuItemShowTimeInMenuBar setAction:@selector(actionShowTime:)];
-
+    [MCMenuItemShowDateInMenuBar setAction: @selector(actionShowDate:)];
+    [MCMenuItemShowDateShortStyleInMenuBar setAction:
+     @selector(actionShowDateShortStyle:)];
+    [MCMenuItemShowDayInMenuBar setAction: @selector(actionShowDay:)];
+    [MCMenuItemShowYearInMenuBar setAction: @selector(actionShowYear:)];
+    [MCMenuItemShowTimeInMenuBar setAction: @selector(actionShowTime:)];
+    [MCMenuItemLaunchAtLogin setAction: @selector(actionLaunchAtLogin:)];
+    
     /*
         Set the state of (checkmark) of the menu items based on the user's
         preferences
@@ -96,8 +116,10 @@ NSString *gMenuImage = @"MenuCal.png";
     [MCMenuItemShowDateInMenuBar setState: (showDate ? NSOnState : NSOffState)];
     [MCMenuItemShowDateShortStyleInMenuBar setState: (showDateShortStyle ? NSOnState : NSOffState)];
     [MCMenuItemShowDayInMenuBar setState: (showDay ? NSOnState : NSOffState)];
+    [MCMenuItemShowYearInMenuBar setState: (showYear ? NSOnState : NSOffState)];
     [MCMenuItemShowTimeInMenuBar setState: (showTime ? NSOnState : NSOffState)];
-
+    [MCMenuItemLaunchAtLogin setState: (launchAtLogin ? NSOnState : NSOffState)];
+    
     /*
         Enable / disable the menu bar items:
         https://stackoverflow.com/questions/4524294/disabled-nsmenuitem#4683010
@@ -105,18 +127,20 @@ NSString *gMenuImage = @"MenuCal.png";
         Note: this works b/c the menu is marked as not auto-enable in MainMenu.xib
 
         Rules:
-        1. "Show Date", "Show Time", and "Quit" should always be enabled.
-        2. "Show Day" and "Short Style" should be enabled only if the user wants the
-           date to be shown in the menu bar
+        1. "Show Date", "Show Time", "Launch At Login", and "Quit" should always
+           be enabled.
+        2. "Show Day", "Show Year", and "Short Style" should be enabled only if
+           the user wants the date to be shown in the menu bar
         3. The static date should always be disabled.
      */
-
     
-    [MCMenuItemShowDateInMenuBar setEnabled:TRUE];
-    [MCMenuItemShowTimeInMenuBar setEnabled:TRUE];
+    [MCMenuItemShowDateInMenuBar setEnabled: TRUE];
+    [MCMenuItemShowTimeInMenuBar setEnabled: TRUE];
+    [MCMenuItemLaunchAtLogin setEnabled: TRUE];
     [MCMenuItemQuit setEnabled: TRUE];
     
     [MCMenuItemShowDayInMenuBar setEnabled: showDate];
+    [MCMenuItemShowYearInMenuBar setEnabled: showDate];
     [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
 
     [MCMenuItemDate setEnabled: FALSE];
@@ -141,6 +165,23 @@ NSString *gMenuImage = @"MenuCal.png";
     */
 
     [MCMenuItemDatePicker setView: MCDatePicker];
+    
+    apps = [[NSWorkspace sharedWorkspace] runningApplications];
+    for (NSRunningApplication *app in apps)
+    {
+        if ([app.bundleIdentifier isEqualToString: gHelperAppBundle])
+        {
+            startedAtLogin = TRUE;
+            break;
+        }
+    }
+
+    if (startedAtLogin)
+    {
+        [[NSDistributedNotificationCenter defaultCenter]
+         postNotificationName: gMsgTerminate
+         object: [[NSBundle mainBundle] bundleIdentifier]];
+    }
 }
 
 - (void)awakeFromNib: (NSNotification *)aNotification
@@ -273,6 +314,32 @@ NSString *gMenuImage = @"MenuCal.png";
     [MCTimer fire];
 }
 
+/* actionShowTime - actions to take when the show year menu item is clicked */
+
+-(void)actionShowYear:(id)sender
+{
+    /* Toggle the setting for whether the day should be shown in the menubar */
+    
+    showYear = !showYear;
+    
+    /* Update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: showYear
+                                            forKey: gPrefShowYear];
+    
+    /*
+     Show a checkmark before this menu item if the date should be
+     shown in the menubar:
+     https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
+     */
+    
+    [MCMenuItemShowYearInMenuBar setState: (showYear ? NSOnState : NSOffState)];
+    
+    /* Update the title of this menu item by firing the current timer */
+    
+    [MCTimer fire];
+}
+
 /* actionShowTime - actions to take when the show time menu item is clicked */
 
 - (void)actionShowTime: (id)sender
@@ -299,11 +366,46 @@ NSString *gMenuImage = @"MenuCal.png";
     [MCTimer fire];
 }
 
+/* actionShowTime - actions to take when the launch at login menu item is clicked */
+
+- (void) actionLaunchAtLogin:(id)sender
+{
+    /* Toggle the setting for whether we should launch at login */
+
+    launchAtLogin = !launchAtLogin;
+    
+    /* Update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: launchAtLogin
+                                            forKey: gPrefLaunchAtLogin];
+
+    /*
+        Show a checkmark before this menu item if we should launch at login:
+        https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
+     */
+    
+    [MCMenuItemLaunchAtLogin setState: (launchAtLogin ? NSOnState : NSOffState)];
+
+    if (!SMLoginItemSetEnabled ((__bridge CFStringRef)gHelperAppBundle, launchAtLogin))
+    {
+        NSAlert *alert = [NSAlert alertWithMessageText: @"An error ocurred"
+                                         defaultButton: @"OK"
+                                       alternateButton: nil
+                                           otherButton: nil
+                             informativeTextWithFormat: (launchAtLogin ?
+                                                         @"Couldn't add Helper App to launch at login items list." :
+                                                         @"Couldn't remove Helper App from login items list." )];
+        [alert runModal];
+    }
+}
+
 /* updateStatusItemTitle - update the title of this menu item */
 
 - (void)updateStatusItemTitle
 {
     NSMutableString *dateStr = nil;
+    NSMutableString *timeStr = nil;
+    NSMutableString *dateFormatStr = nil;
     NSDate *currentDate = nil;
     NSDateComponents *components = nil;
     NSInteger hour;
@@ -339,29 +441,54 @@ NSString *gMenuImage = @"MenuCal.png";
 
     /* Initialize the date string to a blank */
     
-    dateStr = [NSMutableString stringWithString:@""];
-
-    /* If the date is to be shown, get it using a date formatter */
+    dateStr = [NSMutableString stringWithString: @""];
+    dateFormatStr = [NSMutableString stringWithString: @""];
+    timeStr = [NSMutableString stringWithFormat: @""];
+    
+    /*
+        If the date is to be shown, format it using a date formatter:
+        http://iosdevelopertips.com/cocoa/date-formatters-examples-take-2.html
+        http://www.alexcurylo.com/2009/01/28/nsdateformatter-formatting/
+     */
     
     if (showDate)
     {
-
-        /* If the day is to be shown, get it using a date formatter */
+        /*
+            Initialize the date formatter to the current locale:
+            http://iosdevelopertips.com/cocoa/date-formatter-examples-take-4-setting-locale.html
+         */
         
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setLocale: [NSLocale currentLocale]];
+        
+        /* If requested, add the day to the date format string */
+
         if (showDay)
         {
-            dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"EEE"];
-            [dateStr appendString: [dateFormatter stringFromDate: currentDate]];
-            [dateStr appendString: @" "];
+            [dateFormatStr appendString: @"EEE "];
+        }
+
+        /* If requested, format the date in short style */
+        
+        if (showDateShortStyle)
+        {
+            [dateFormatStr appendString: @"LL/MM"];
+            if (showYear)
+            {
+                [dateFormatStr appendString: @"/yyyy"];
+            }
+        }
+        else
+        {
+            [dateFormatStr appendString: @"MMM dd"];
+            if (showYear)
+            {
+                [dateFormatStr appendString: @" yyyy"];
+            }
         }
         
-        [dateStr appendString:
-         [NSDateFormatter localizedStringFromDate: currentDate
-                                        dateStyle: (showDateShortStyle ?
-                                                    NSDateFormatterShortStyle :
-                                                    NSDateFormatterMediumStyle)
-                                        timeStyle: NSDateFormatterNoStyle]];
+        [dateFormatter setDateFormat: dateFormatStr];
+        [dateStr appendString: [dateFormatter stringFromDate: currentDate]];
         [dateStr appendString:@" "];
     }
 
@@ -379,12 +506,18 @@ NSString *gMenuImage = @"MenuCal.png";
                          fromDate: currentDate];
         hour = [components hour];
         minute = [components minute];
-            
-        [dateStr appendFormat: @"%2ld%c%02ld",
+        
+        /*
+            Left pad the time:
+            https://stackoverflow.com/questions/6548790/how-do-i-left-pad-an-nsstring-to-fit-it-in-a-fixed-width
+         */
+        
+        [timeStr appendFormat: @"%2ld%c%02ld",
                                 (long)hour,
                                 (showColon ? ':' : ' '),
                                 (long)minute];
-
+        [dateStr appendFormat: @"%-5s", [timeStr UTF8String]];
+        
         /* Toggle the colon */
         
         showColon = !showColon;
