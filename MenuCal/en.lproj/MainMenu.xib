@@ -23,6 +23,7 @@
                 <outlet property="MCMenuItemShowDateShortStyleInMenuBar" destination="LXt-5P-rG6" id="Uu1-Tj-EYl"/>
                 <outlet property="MCMenuItemShowDayInMenuBar" destination="oHt-ii-Zfe" id="CCk-PQ-Bsp"/>
                 <outlet property="MCMenuItemShowTimeInMenuBar" destination="DtR-ip-7Rs" id="3mN-hz-M4x"/>
+                <outlet property="MCMenuItemShowTimeZone" destination="Nyi-52-w3E" id="oxb-NY-tag"/>
                 <outlet property="MCMenuItemShowYearInMenuBar" destination="SJB-QS-nDe" id="JJO-la-9Ok"/>
             </connections>
         </customObject>
@@ -30,10 +31,12 @@
         <menu autoenablesItems="NO" id="2qd-Hm-EeB">
             <items>
                 <menuItem title="Date" id="ycX-ii-a3I">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="1fx-cv-vTG"/>
                 <menuItem title="Item" id="LhV-Ap-Lao">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="nPD-hk-2BG"/>
@@ -43,14 +46,17 @@
                 <menuItem title="Short Style" id="LXt-5P-rG6">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
-                <menuItem title="Show Day" id="oHt-ii-Zfe">
+                <menuItem title="With Day" id="oHt-ii-Zfe">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
-                <menuItem title="Show Year" id="SJB-QS-nDe">
+                <menuItem title="With Year" id="SJB-QS-nDe">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="ZDb-N8-Js5"/>
                 <menuItem title="Show Time" id="DtR-ip-7Rs">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="With Timezone" id="Nyi-52-w3E">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="t9J-OM-EaW"/>

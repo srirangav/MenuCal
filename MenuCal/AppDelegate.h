@@ -5,6 +5,7 @@
  
  v. 1.0.0 (11/05/2018) - Initial version
  v. 1.0.1 (11/12/2018) - Add support for launching at login time
+ v. 1.0.2 (11/18/2018) - Add timezone support
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -41,6 +42,7 @@
     IBOutlet NSMenuItem *MCMenuItemShowDayInMenuBar;
     IBOutlet NSMenuItem *MCMenuItemShowYearInMenuBar;
     IBOutlet NSMenuItem *MCMenuItemShowTimeInMenuBar;
+    IBOutlet NSMenuItem *MCMenuItemShowTimeZone;
     IBOutlet NSMenuItem *MCMenuItemLaunchAtLogin;
     IBOutlet MenuCalDatePicker *MCDatePicker;
     NSTimer *MCTimer;
@@ -50,6 +52,7 @@
     BOOL showYear;
     BOOL showTime;
     BOOL showColon;
+    BOOL showTimeZone;
     BOOL launchAtLogin;
 }
 
@@ -59,6 +62,7 @@
 - (void) actionShowDay: (id)sender;
 - (void) actionShowYear: (id)sender;
 - (void) actionShowTime: (id)sender;
+- (void) actionShowTimeZone: (id)sender;
 - (void) actionLaunchAtLogin: (id)sender;
 - (void) updateStatusItemTitle;
 - (void) updateDate;

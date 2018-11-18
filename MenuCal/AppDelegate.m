@@ -6,6 +6,7 @@
  v. 1.0.0 (11/05/2018) - Initial version
  v. 1.0.1 (11/07/2018) - Save user preferences
  v. 1.0.2 (11/12/2018) - Add support for launching at login time
+ v. 1.0.3 (11/18/2018) - Add timezone support
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -40,15 +41,18 @@ NSString *gPrefShowDateShortStyle = @"ShowDateShortStyle";
 NSString *gPrefShowDay = @"ShowDay";
 NSString *gPrefShowYear = @"ShowYear";
 NSString *gPrefShowTime = @"ShowTime";
+NSString *gPrefShowTimeZone = @"ShowTimeZone";
 NSString *gPrefLaunchAtLogin = @"LaunchAtLogin";
 
 /* Menu image file name */
 
 NSString *gMenuImage = @"MenuCal.png";
 
-/* Help App Bundle Name */
+/* Helper app bundle name */
 
 NSString *gHelperAppBundle = @"org.calalum.ranga.MenuCalLaunchAtLoginHelper";
+
+/* Helper app termination message */
 
 NSString *gMsgTerminate = @"Terminate";
 
@@ -89,6 +93,7 @@ NSString *gMsgTerminate = @"Terminate";
     showDay = [defaults boolForKey: gPrefShowDay];
     showYear = [defaults boolForKey: gPrefShowYear];
     showTime = [defaults boolForKey: gPrefShowTime];
+    showTimeZone = [defaults boolForKey: gPrefShowTimeZone];
     launchAtLogin = [defaults boolForKey: gPrefLaunchAtLogin];
     
     /*
@@ -100,25 +105,52 @@ NSString *gMsgTerminate = @"Terminate";
     
     /* Set the actions for show date and show time menu items */
     
-    [MCMenuItemShowDateInMenuBar setAction: @selector(actionShowDate:)];
+    [MCMenuItemShowDateInMenuBar setAction:
+     @selector(actionShowDate:)];
+
     [MCMenuItemShowDateShortStyleInMenuBar setAction:
      @selector(actionShowDateShortStyle:)];
-    [MCMenuItemShowDayInMenuBar setAction: @selector(actionShowDay:)];
-    [MCMenuItemShowYearInMenuBar setAction: @selector(actionShowYear:)];
-    [MCMenuItemShowTimeInMenuBar setAction: @selector(actionShowTime:)];
-    [MCMenuItemLaunchAtLogin setAction: @selector(actionLaunchAtLogin:)];
+
+    [MCMenuItemShowDayInMenuBar setAction:
+     @selector(actionShowDay:)];
+
+    [MCMenuItemShowYearInMenuBar setAction:
+     @selector(actionShowYear:)];
+
+    [MCMenuItemShowTimeInMenuBar setAction:
+     @selector(actionShowTime:)];
+
+    [MCMenuItemShowTimeZone setAction:
+     @selector(actionShowTimeZone:)];
+    
+    [MCMenuItemLaunchAtLogin setAction:
+     @selector(actionLaunchAtLogin:)];
     
     /*
         Set the state of (checkmark) of the menu items based on the user's
         preferences
      */
     
-    [MCMenuItemShowDateInMenuBar setState: (showDate ? NSOnState : NSOffState)];
-    [MCMenuItemShowDateShortStyleInMenuBar setState: (showDateShortStyle ? NSOnState : NSOffState)];
-    [MCMenuItemShowDayInMenuBar setState: (showDay ? NSOnState : NSOffState)];
-    [MCMenuItemShowYearInMenuBar setState: (showYear ? NSOnState : NSOffState)];
-    [MCMenuItemShowTimeInMenuBar setState: (showTime ? NSOnState : NSOffState)];
-    [MCMenuItemLaunchAtLogin setState: (launchAtLogin ? NSOnState : NSOffState)];
+    [MCMenuItemShowDateInMenuBar setState:
+     (showDate ? NSOnState : NSOffState)];
+    
+    [MCMenuItemShowDateShortStyleInMenuBar setState:
+     (showDateShortStyle ? NSOnState : NSOffState)];
+    
+    [MCMenuItemShowDayInMenuBar setState:
+     (showDay ? NSOnState : NSOffState)];
+    
+    [MCMenuItemShowYearInMenuBar setState:
+     (showYear ? NSOnState : NSOffState)];
+    
+    [MCMenuItemShowTimeInMenuBar setState:
+     (showTime ? NSOnState : NSOffState)];
+    
+    [MCMenuItemShowTimeZone setState:
+     (showTimeZone ? NSOnState : NSOffState)];
+
+    [MCMenuItemLaunchAtLogin setState:
+     (launchAtLogin ? NSOnState : NSOffState)];
     
     /*
         Enable / disable the menu bar items:
@@ -129,9 +161,11 @@ NSString *gMsgTerminate = @"Terminate";
         Rules:
         1. "Show Date", "Show Time", "Launch At Login", and "Quit" should always
            be enabled.
-        2. "Show Day", "Show Year", and "Short Style" should be enabled only if
+        2. "With Day", "With Year", and "Short Style" should be enabled only if
            the user wants the date to be shown in the menu bar
-        3. The static date should always be disabled.
+        3. "With Timezone" should be enabled only if the user wants the time
+           displayed in the menu bar
+        4. The static date should always be disabled.
      */
     
     [MCMenuItemShowDateInMenuBar setEnabled: TRUE];
@@ -143,29 +177,33 @@ NSString *gMsgTerminate = @"Terminate";
     [MCMenuItemShowYearInMenuBar setEnabled: showDate];
     [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
 
-    [MCMenuItemDate setEnabled: FALSE];
-
-    /* Enable the update timer */
+    [MCMenuItemShowTimeZone setEnabled: showTime];
     
-    [self actionTimer];
+    [MCMenuItemDate setEnabled: FALSE];
 
     /* Create a new datepicker in graphic mode without a border */
     
-    MCDatePicker = [[MenuCalDatePicker alloc] initWithFrame: NSMakeRect(0, 0, 140, 148)];
+    MCDatePicker = [[MenuCalDatePicker alloc]
+                    initWithFrame: NSMakeRect(0, 0, 140, 148)];
     [MCDatePicker setDatePickerStyle: NSClockAndCalendarDatePickerStyle];
     [MCDatePicker setBordered: FALSE];
 
-    /* Set the date */
-    
-    [self updateDate];
-    
     /*
         Make the datepicker the view for the menuitem:
         https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MenuList/Articles/ViewsInMenuItems.html
     */
 
     [MCMenuItemDatePicker setView: MCDatePicker];
+
+    /* Enable the update timer */
     
+    [self actionTimer];
+
+    /*
+        Terminate the helper if it is running:
+        https://blog.timschroeder.net/2014/01/25/detecting-launch-at-login-revisited/
+     */
+
     apps = [[NSWorkspace sharedWorkspace] runningApplications];
     for (NSRunningApplication *app in apps)
     {
@@ -211,8 +249,9 @@ NSString *gMsgTerminate = @"Terminate";
         duration = (showDate ? 1.5 : 2.0);
     }
 
-    /* Update the menu bar */
+    /* Update the menu item and menu bar */
     
+    [self updateDate];
     [self updateStatusItemTitle];
     
     /* Start a new timer */
@@ -246,12 +285,13 @@ NSString *gMsgTerminate = @"Terminate";
     [MCMenuItemShowDateInMenuBar setState: (showDate ? NSOnState : NSOffState)];
 
     /*
-        Enable / disable the show day and show date in short style menu items
-        based on whether the date is displayed
+        Enable / disable the show day, show date in short style, and
+        show year menu items based on whether the date is displayed
      */
     
     [MCMenuItemShowDayInMenuBar setEnabled: showDate];
     [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
+    [MCMenuItemShowYearInMenuBar setEnabled: showDate];
     
     /* Update the title of this menu item by firing the current timer */
     
@@ -259,8 +299,8 @@ NSString *gMsgTerminate = @"Terminate";
  }
 
 /*
-    actionShowDate - actions to take when the show date in short style menu
-                     item is clicked
+    actionShowDateShortStyle - actions to take when the show date in short
+                               style menu item is clicked
  */
 
 - (void)actionShowDateShortStyle:(id)sender
@@ -307,14 +347,15 @@ NSString *gMsgTerminate = @"Terminate";
         https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
      */
     
-    [MCMenuItemShowDayInMenuBar setState: (showDay ? NSOnState : NSOffState)];
+    [MCMenuItemShowDayInMenuBar setState:
+     (showDay ? NSOnState : NSOffState)];
     
     /* Update the title of this menu item by firing the current timer */
     
     [MCTimer fire];
 }
 
-/* actionShowTime - actions to take when the show year menu item is clicked */
+/* actionShowYear - actions to take when the show year menu item is clicked */
 
 -(void)actionShowYear:(id)sender
 {
@@ -333,7 +374,8 @@ NSString *gMsgTerminate = @"Terminate";
      https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
      */
     
-    [MCMenuItemShowYearInMenuBar setState: (showYear ? NSOnState : NSOffState)];
+    [MCMenuItemShowYearInMenuBar setState:
+     (showYear ? NSOnState : NSOffState)];
     
     /* Update the title of this menu item by firing the current timer */
     
@@ -361,12 +403,51 @@ NSString *gMsgTerminate = @"Terminate";
     
     [MCMenuItemShowTimeInMenuBar setState: (showTime ? NSOnState : NSOffState)];
     
+    /*
+        Enable/disable the show timezone menu item based on whether
+        the time should be shown in the menu bar
+     */
+    
+    [MCMenuItemShowTimeZone setEnabled: showTime];
+    
     /* Update the title of this menu item by firing the current timer */
 
     [MCTimer fire];
 }
 
-/* actionShowTime - actions to take when the launch at login menu item is clicked */
+/*
+    actionShowTimeZone - actions to take when the show timezone menu item
+                         is clicked
+ */
+
+- (void)actionShowTimeZone:(id)sender
+{
+    /* Toggle the setting for whether the timezone should be shown */
+    
+    showTimeZone = !showTimeZone;
+    
+    /* Update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: showTimeZone
+                                            forKey: gPrefShowTimeZone];
+    
+    /*
+        Show a checkmark before this menu item if the time should be
+        shown in the menubar:
+        https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
+     */
+    
+    [MCMenuItemShowTimeZone setState: (showTimeZone ? NSOnState : NSOffState)];
+    
+    /* Update the title of this menu item by firing the current timer */
+    
+    [MCTimer fire];
+}
+
+/*
+    actionLaunchAtLogin - actions to take when the launch at login menu item
+                          is clicked
+ */
 
 - (void) actionLaunchAtLogin:(id)sender
 {
@@ -384,17 +465,20 @@ NSString *gMsgTerminate = @"Terminate";
         https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
      */
     
-    [MCMenuItemLaunchAtLogin setState: (launchAtLogin ? NSOnState : NSOffState)];
+    [MCMenuItemLaunchAtLogin setState:
+     (launchAtLogin ? NSOnState : NSOffState)];
 
-    if (!SMLoginItemSetEnabled ((__bridge CFStringRef)gHelperAppBundle, launchAtLogin))
+    if (!SMLoginItemSetEnabled ((__bridge CFStringRef)gHelperAppBundle,
+                                launchAtLogin))
     {
-        NSAlert *alert = [NSAlert alertWithMessageText: @"An error ocurred"
-                                         defaultButton: @"OK"
-                                       alternateButton: nil
-                                           otherButton: nil
-                             informativeTextWithFormat: (launchAtLogin ?
-                                                         @"Couldn't add Helper App to launch at login items list." :
-                                                         @"Couldn't remove Helper App from login items list." )];
+        NSAlert *alert =
+            [NSAlert alertWithMessageText: @"An error ocurred"
+                            defaultButton: @"OK"
+                          alternateButton: nil
+                              otherButton: nil
+                informativeTextWithFormat: (launchAtLogin ?
+                                            @"Can't add helper to login items." :
+                                            @"Can't remove helper from login items." )];
         [alert runModal];
     }
 }
@@ -403,18 +487,12 @@ NSString *gMsgTerminate = @"Terminate";
 
 - (void)updateStatusItemTitle
 {
-    NSMutableString *dateStr = nil;
-    NSMutableString *timeStr = nil;
     NSMutableString *dateFormatStr = nil;
+    NSString *currentDateFormat = nil;
     NSDate *currentDate = nil;
-    NSDateComponents *components = nil;
-    NSInteger hour;
-    NSInteger minute;
     NSDateFormatter *dateFormatter;
-    
-    /* Update the Date */
-    
-    [self updateDate];
+    NSLocale *currentLoc = nil;
+    BOOL timeIn24HrFormat = FALSE;
     
     /*
         If neither the date nor the time should be shown in the menubar,
@@ -429,22 +507,33 @@ NSString *gMsgTerminate = @"Terminate";
         return;
     }
 
-    /* The date and/or time should be displayed in the menubar */
-    
-    /* Turn off the image */
+    /*
+        The date and/or time should be displayed in the menubar, so turn
+        off the icon.
+     */
     
     [self.statusItem setImage: nil];
 
-    /* Get the current date */
+    /* Get the current date and locale */
     
     currentDate = [NSDate date];
-
-    /* Initialize the date string to a blank */
+    currentLoc = [NSLocale currentLocale];
     
-    dateStr = [NSMutableString stringWithString: @""];
+    /*
+        Initialize the date string, the date format string, and the
+        time string to blank strings
+     */
+    
     dateFormatStr = [NSMutableString stringWithString: @""];
-    timeStr = [NSMutableString stringWithFormat: @""];
     
+    /*
+        Initialize the date formatter to the current locale:
+        http://iosdevelopertips.com/cocoa/date-formatter-examples-take-4-setting-locale.html
+     */
+    
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale: currentLoc];
+
     /*
         If the date is to be shown, format it using a date formatter:
         http://iosdevelopertips.com/cocoa/date-formatters-examples-take-2.html
@@ -453,14 +542,6 @@ NSString *gMsgTerminate = @"Terminate";
     
     if (showDate)
     {
-        /*
-            Initialize the date formatter to the current locale:
-            http://iosdevelopertips.com/cocoa/date-formatter-examples-take-4-setting-locale.html
-         */
-        
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setLocale: [NSLocale currentLocale]];
-        
         /* If requested, add the day to the date format string */
 
         if (showDay)
@@ -470,65 +551,77 @@ NSString *gMsgTerminate = @"Terminate";
 
         /* If requested, format the date in short style */
         
-        if (showDateShortStyle)
+        [dateFormatStr appendString:
+         (showDateShortStyle ? @"LL/MM" : @"MMM dd")];
+
+        /*
+            Add the year, if requested (with a slash, if the date is being
+            displayed in short form)
+         */
+
+        if (showYear)
         {
-            [dateFormatStr appendString: @"LL/MM"];
-            if (showYear)
-            {
-                [dateFormatStr appendString: @"/yyyy"];
-            }
+            [dateFormatStr appendFormat: @"%cyyyy",
+             (showDateShortStyle ? '/' : ' ')];
         }
-        else
-        {
-            [dateFormatStr appendString: @"MMM dd"];
-            if (showYear)
-            {
-                [dateFormatStr appendString: @" yyyy"];
-            }
-        }
-        
-        [dateFormatter setDateFormat: dateFormatStr];
-        [dateStr appendString: [dateFormatter stringFromDate: currentDate]];
-        [dateStr appendString:@" "];
     }
 
-    /* If the time is to be shown, display it */
+    /* If the time is to be shown, add it to the date format string */
     
     if (showTime)
     {
         /*
-            Get the current time as hours and minutes:
-            https://stackoverflow.com/questions/2927028/how-do-i-get-hour-and-minutes-from-nsdate#2927074
+            If the date is being shown, add a space between the date
+            and the time
          */
-            
-        components = [[NSCalendar currentCalendar]
-                       components: (NSCalendarUnitHour | NSCalendarUnitMinute)
-                         fromDate: currentDate];
-        hour = [components hour];
-        minute = [components minute];
         
+        if (showDate)
+        {
+            [dateFormatStr appendString: @" "];
+        }
+
         /*
-            Left pad the time:
-            https://stackoverflow.com/questions/6548790/how-do-i-left-pad-an-nsstring-to-fit-it-in-a-fixed-width
+            If the system displays time in 24hr format, make sure it
+            is reflected in the date formatter:
+            https://stackoverflow.com/questions/23114926/get-time-format-am-pm-or-24hrs-from-current-calendar-locale
          */
         
-        [timeStr appendFormat: @"%2ld%c%02ld",
-                                (long)hour,
-                                (showColon ? ':' : ' '),
-                                (long)minute];
-        [dateStr appendFormat: @"%-5s", [timeStr UTF8String]];
+        currentDateFormat =
+            [NSDateFormatter dateFormatFromTemplate: @"jm"
+                                            options: 0
+                                             locale: currentLoc];
+        timeIn24HrFormat =
+            ([currentDateFormat rangeOfString:@"H"].location != NSNotFound ||
+             [currentDateFormat rangeOfString:@"k"].location != NSNotFound);
         
-        /* Toggle the colon */
+        [dateFormatStr appendString: (timeIn24HrFormat ? @"HH" : @"hh")];
         
+        /* blink the colon */
+        
+        [dateFormatStr appendFormat: @"%cmm", (showColon ? ':' : ' ')];
         showColon = !showColon;
+        
+        /* Add the timezone, if requested */
+        
+        if (showTimeZone)
+        {
+            [dateFormatStr appendString: @" z"];
+        }
     }
+
+    /* Set the date formatter's format string as formatted above */
     
+    [dateFormatter setDateFormat: dateFormatStr];
+
     /* Update the menubar */
     
-    [self.statusItem setTitle: dateStr];
+    [self.statusItem setTitle: [dateFormatter stringFromDate: currentDate]];
 }
 
-/* updateDate - update the date string in the menu and the date in the datepicker */
+/*
+    updateDate - update the date string in the menu and the date in
+                 the datepicker
+ */
 
 - (void)updateDate
 {
@@ -542,7 +635,7 @@ NSString *gMsgTerminate = @"Terminate";
 
     /* Initialize the string that will hold the date */
     
-    dateStr = [NSMutableString stringWithString:@""];
+    dateStr = [NSMutableString stringWithString: @""];
 
     /* If the day is to be shown, get it using a date formatter */
 
@@ -562,9 +655,9 @@ NSString *gMsgTerminate = @"Terminate";
                                     timeStyle: NSDateFormatterNoStyle]];
 
     /*
-     Set the first menu item to the current date:
-     https://stackoverflow.com/questions/576265/convert-nsdate-to-nsstring#11005104
-     https://developer.apple.com/documentation/foundation/nsdateformatter#//apple_ref/occ/clm/NSDateFormatter/localizedStringFromDate%3adateStyle%3atimeStyle%3a
+        Set the first menu item to the current date:
+        https://stackoverflow.com/questions/576265/convert-nsdate-to-nsstring#11005104
+        https://developer.apple.com/documentation/foundation/nsdateformatter#//apple_ref/occ/clm/NSDateFormatter/localizedStringFromDate%3adateStyle%3atimeStyle%3a
      */
 
     [MCMenuItemDate setTitle: dateStr];
