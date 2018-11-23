@@ -30,8 +30,9 @@
 
 @implementation MenuCalDatePicker
 
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
+- (void)drawRect:(NSRect)dirtyRect
+{
+    [super drawRect: dirtyRect];
 }
 
 - (BOOL) acceptsFirstMouse:(NSEvent *)event
