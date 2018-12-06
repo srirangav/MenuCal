@@ -22,6 +22,7 @@
                 <outlet property="MCMenuItemShowDateInMenuBar" destination="EFp-49-JMA" id="hmy-dh-fUw"/>
                 <outlet property="MCMenuItemShowDateShortStyleInMenuBar" destination="LXt-5P-rG6" id="Uu1-Tj-EYl"/>
                 <outlet property="MCMenuItemShowDayInMenuBar" destination="oHt-ii-Zfe" id="CCk-PQ-Bsp"/>
+                <outlet property="MCMenuItemShowFullMonthInMenuBar" destination="as8-rA-a2C" id="Hn3-oh-wEm"/>
                 <outlet property="MCMenuItemShowTimeInMenuBar" destination="DtR-ip-7Rs" id="3mN-hz-M4x"/>
                 <outlet property="MCMenuItemShowTimeZone" destination="Nyi-52-w3E" id="oxb-NY-tag"/>
                 <outlet property="MCMenuItemShowYearInMenuBar" destination="SJB-QS-nDe" id="JJO-la-9Ok"/>
@@ -46,6 +47,9 @@
                 <menuItem title="Short Style" id="LXt-5P-rG6">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
+                <menuItem title="With Full Month" id="as8-rA-a2C">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
                 <menuItem title="With Day" id="oHt-ii-Zfe">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
@@ -56,7 +60,7 @@
                 <menuItem title="Show Time" id="DtR-ip-7Rs">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
-                <menuItem title="With Timezone" id="Nyi-52-w3E">
+                <menuItem title="With Time Zone" id="Nyi-52-w3E">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="t9J-OM-EaW"/>

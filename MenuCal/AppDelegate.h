@@ -5,7 +5,8 @@
  
  v. 1.0.0 (11/05/2018) - Initial version
  v. 1.0.1 (11/12/2018) - Add support for launching at login time
- v. 1.0.2 (11/18/2018) - Add timezone support
+ v. 1.0.2 (11/18/2018) - Add support for timezones
+ v. 1.0.3 (12/05/2018) - Add support for full month names
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -39,6 +40,7 @@
     IBOutlet NSMenuItem *MCMenuItemDate;
     IBOutlet NSMenuItem *MCMenuItemShowDateInMenuBar;
     IBOutlet NSMenuItem *MCMenuItemShowDateShortStyleInMenuBar;
+    IBOutlet NSMenuItem *MCMenuItemShowFullMonthInMenuBar;
     IBOutlet NSMenuItem *MCMenuItemShowDayInMenuBar;
     IBOutlet NSMenuItem *MCMenuItemShowYearInMenuBar;
     IBOutlet NSMenuItem *MCMenuItemShowTimeInMenuBar;
@@ -48,6 +50,7 @@
     NSTimer *MCTimer;
     BOOL showDate;
     BOOL showDateShortStyle;
+    BOOL showFullMonth;
     BOOL showDay;
     BOOL showYear;
     BOOL showTime;
@@ -59,6 +62,7 @@
 - (void) actionTimer;
 - (void) actionShowDate: (id)sender;
 - (void) actionShowDateShortStyle: (id)sender;
+- (void) actionShowFullMonth: (id)sender;
 - (void) actionShowDay: (id)sender;
 - (void) actionShowYear: (id)sender;
 - (void) actionShowTime: (id)sender;

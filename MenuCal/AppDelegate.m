@@ -6,7 +6,8 @@
  v. 1.0.0 (11/05/2018) - Initial version
  v. 1.0.1 (11/07/2018) - Save user preferences
  v. 1.0.2 (11/12/2018) - Add support for launching at login time
- v. 1.0.3 (11/18/2018) - Add timezone support
+ v. 1.0.3 (11/18/2018) - Add support for timezones
+ v. 1.0.4 (12/05/2018) - Add support for full month names
  
  Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
@@ -38,6 +39,7 @@
 
 NSString *gPrefShowDate = @"ShowDate";
 NSString *gPrefShowDateShortStyle = @"ShowDateShortStyle";
+NSString *gPrefShowFullMonth = @"ShowFullMonth";
 NSString *gPrefShowDay = @"ShowDay";
 NSString *gPrefShowYear = @"ShowYear";
 NSString *gPrefShowTime = @"ShowTime";
@@ -90,6 +92,7 @@ NSString *gMsgTerminate = @"Terminate";
     
     showDate = [defaults boolForKey: gPrefShowDate];
     showDateShortStyle = [defaults boolForKey: gPrefShowDateShortStyle];
+    showFullMonth = [defaults boolForKey: gPrefShowFullMonth];
     showDay = [defaults boolForKey: gPrefShowDay];
     showYear = [defaults boolForKey: gPrefShowYear];
     showTime = [defaults boolForKey: gPrefShowTime];
@@ -103,13 +106,16 @@ NSString *gMsgTerminate = @"Terminate";
     
     showColon = TRUE;
     
-    /* Set the actions for show date and show time menu items */
+    /* Set the actions for the menu items */
     
     [MCMenuItemShowDateInMenuBar setAction:
      @selector(actionShowDate:)];
 
     [MCMenuItemShowDateShortStyleInMenuBar setAction:
      @selector(actionShowDateShortStyle:)];
+
+    [MCMenuItemShowFullMonthInMenuBar setAction:
+     @selector(actionShowFullMonth:)];
 
     [MCMenuItemShowDayInMenuBar setAction:
      @selector(actionShowDay:)];
@@ -136,7 +142,10 @@ NSString *gMsgTerminate = @"Terminate";
     
     [MCMenuItemShowDateShortStyleInMenuBar setState:
      (showDateShortStyle ? NSOnState : NSOffState)];
-    
+
+    [MCMenuItemShowFullMonthInMenuBar setState:
+     (showFullMonth ? NSOnState : NSOffState)];
+
     [MCMenuItemShowDayInMenuBar setState:
      (showDay ? NSOnState : NSOffState)];
     
@@ -162,10 +171,12 @@ NSString *gMsgTerminate = @"Terminate";
         1. "Show Date", "Show Time", "Launch At Login", and "Quit" should always
            be enabled.
         2. "With Day", "With Year", and "Short Style" should be enabled only if
-           the user wants the date to be shown in the menu bar
-        3. "With Timezone" should be enabled only if the user wants the time
-           displayed in the menu bar
-        4. The static date should always be disabled.
+           the user wants the date to be shown in the menu bar.
+        3. "Full Date" should only be enabled if "Short Style" is disabled and
+           the user wants the date to be shown in the menu bar.
+        4. "With Timezone" should be enabled only if the user wants the time
+           displayed in the menu bar.
+        5. The static date should always be disabled.
      */
     
     [MCMenuItemShowDateInMenuBar setEnabled: TRUE];
@@ -176,6 +187,9 @@ NSString *gMsgTerminate = @"Terminate";
     [MCMenuItemShowDayInMenuBar setEnabled: showDate];
     [MCMenuItemShowYearInMenuBar setEnabled: showDate];
     [MCMenuItemShowDateShortStyleInMenuBar setEnabled: showDate];
+
+    [MCMenuItemShowFullMonthInMenuBar setEnabled:
+     (showDate && !showDateShortStyle) ? TRUE : FALSE];
 
     [MCMenuItemShowTimeZone setEnabled: showTime];
     
@@ -322,6 +336,44 @@ NSString *gMsgTerminate = @"Terminate";
     
     [MCMenuItemShowDateShortStyleInMenuBar setState:
      (showDateShortStyle ? NSOnState : NSOffState)];
+
+    /*
+        Disable / enable the "Full Month" menu item, depending on the
+        user's choices for "Show Date" and "Short Style".
+     */
+    
+    [MCMenuItemShowFullMonthInMenuBar setEnabled:
+     (showDate && !showDateShortStyle) ? TRUE : FALSE];
+    
+    /* Update the title of this menu item by firing the current timer */
+    
+    [MCTimer fire];
+}
+
+/*
+    actionShowFullMonth - actions to take when the show full month menu item
+                          is clicked
+ */
+
+- (void)actionShowFullMonth:(id)sender
+{
+    /* Toggle the setting for whether the day should be shown in the menubar */
+    
+    showFullMonth = !showFullMonth;
+    
+    /* Update the user's preferences */
+    
+    [[NSUserDefaults standardUserDefaults] setBool: showFullMonth
+                                            forKey: gPrefShowFullMonth];
+    
+    /*
+        Show a checkmark before this menu item if the date should be
+        shown in short style:
+        https://stackoverflow.com/questions/2176639/how-to-add-a-check-mark-to-an-nsmenuitem
+     */
+    
+    [MCMenuItemShowFullMonthInMenuBar setState:
+     (showFullMonth ? NSOnState : NSOffState)];
     
     /* Update the title of this menu item by firing the current timer */
     
@@ -538,6 +590,7 @@ NSString *gMsgTerminate = @"Terminate";
         If the date is to be shown, format it using a date formatter:
         http://iosdevelopertips.com/cocoa/date-formatters-examples-take-2.html
         http://www.alexcurylo.com/2009/01/28/nsdateformatter-formatting/
+        https://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
      */
     
     if (showDate)
@@ -549,11 +602,22 @@ NSString *gMsgTerminate = @"Terminate";
             [dateFormatStr appendString: @"EEE "];
         }
 
-        /* If requested, format the date in short style */
+        /*
+            If requested, format the date in short style.  Otherwise format
+            the date with the month and the day (w/o 0 padding).  If the
+            full month is requested, then format accordingly.
+        */
         
-        [dateFormatStr appendString:
-         (showDateShortStyle ? @"LL/MM" : @"MMM dd")];
-
+        if (showDateShortStyle)
+        {
+            [dateFormatStr appendString: @"LL/MM"];
+        }
+        else
+        {
+            [dateFormatStr appendString:
+             (showFullMonth ? @"MMMM d" : @"MMM d")];
+        }
+        
         /*
             Add the year, if requested (with a slash, if the date is being
             displayed in short form)
@@ -647,6 +711,8 @@ NSString *gMsgTerminate = @"Terminate";
         [dateStr appendString: @" "];
     }
 
+    /* TODO: Update this for showFullDate */
+    
     [dateStr appendString:
      [NSDateFormatter localizedStringFromDate: currentDate
                                     dateStyle: (showDateShortStyle ?
