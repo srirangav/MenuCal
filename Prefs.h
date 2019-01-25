@@ -1,11 +1,11 @@
 /*
-    MenuCal - MenuCalDatePicker.h
+    MenuCal - Prefs.h
  
     History:
  
-    v. 1.0.0 (11/03/2018) - Initial version
+    v. 1.0.0 (01/24/2019) - Initial version
  
-    Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
+    Copyright (c) 2019 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the "Software"),
@@ -25,13 +25,33 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     DEALINGS IN THE SOFTWARE.
 */
+#ifndef Prefs_h
+#define Prefs_h
 
-#import <Cocoa/Cocoa.h>
+/* App bundle */
 
-NS_ASSUME_NONNULL_BEGIN
+NSString *gHelperAppBundle = @"org.calalum.ranga.MenuCalLaunchAtLoginHelper";
+NSString *gAppBundle = @"org.calalum.ranga.MenuCal";
+NSString *gAppName = @"MenuCal";
+NSString *gAppGroup = @"CLN8R9E6QM.org.calalum.ranga.MenuCalGroup";
 
-@interface MenuCalDatePicker : NSDatePicker
+/* User preferences */
 
-@end
+NSString *gPrefShowDate = @"ShowDate";
+NSString *gPrefShowDateShortStyle = @"ShowDateShortStyle";
+NSString *gPrefShowFullMonth = @"ShowFullMonth";
+NSString *gPrefShowDay = @"ShowDay";
+NSString *gPrefShowYear = @"ShowYear";
+NSString *gPrefShowTime = @"ShowTime";
+NSString *gPrefShowTimeZone = @"ShowTimeZone";
+NSString *gPrefLaunchAtLogin = @"LaunchAtLogin";
 
-NS_ASSUME_NONNULL_END
+/* Menu image file name */
+
+NSString *gMenuImage = @"MenuCal.png";
+
+/* Helper app termination message */
+
+NSString *gMsgTerminate = @"Terminate";
+
+#endif /* Prefs_h */

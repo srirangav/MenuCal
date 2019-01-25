@@ -1,62 +1,39 @@
 /*
- MenuCal - AppDelegate.m
+    MenuCal - AppDelegate.m
  
- History:
+    History:
  
- v. 1.0.0 (11/05/2018) - Initial version
- v. 1.0.1 (11/07/2018) - Save user preferences
- v. 1.0.2 (11/12/2018) - Add support for launching at login time
- v. 1.0.3 (11/18/2018) - Add support for timezones
- v. 1.0.4 (12/05/2018) - Add support for full month names
+    v. 1.0.0 (11/05/2018) - Initial version
+    v. 1.0.1 (11/07/2018) - Save user preferences
+    v. 1.0.2 (11/12/2018) - Add support for launching at login time
+    v. 1.0.3 (11/18/2018) - Add support for timezones
+    v. 1.0.4 (12/05/2018) - Add support for full month names
+    v. 1.0.5 (01/25/2019) - Add support for app groups / shared preferences
  
- Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
+    Copyright (c) 2018 Sriranga R. Veeraraghavan <ranga@calalum.org>
  
- Permission is hereby granted, free of charge, to any person obtaining
- a copy of this software and associated documentation files (the "Software"),
- to deal in the Software without restriction, including without limitation
- the rights to use, copy, modify, merge, publish, distribute, sublicense,
- and/or sell copies of the Software, and to permit persons to whom the
- Software is furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
  
- The above copyright notice and this permission notice shall be included
- in all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
  
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- DEALINGS IN THE SOFTWARE.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
  */
 
 #import <ServiceManagement/ServiceManagement.h>
 #import "AppDelegate.h"
-
-/* Constants */
-
-/* User preferences */
-
-NSString *gPrefShowDate = @"ShowDate";
-NSString *gPrefShowDateShortStyle = @"ShowDateShortStyle";
-NSString *gPrefShowFullMonth = @"ShowFullMonth";
-NSString *gPrefShowDay = @"ShowDay";
-NSString *gPrefShowYear = @"ShowYear";
-NSString *gPrefShowTime = @"ShowTime";
-NSString *gPrefShowTimeZone = @"ShowTimeZone";
-NSString *gPrefLaunchAtLogin = @"LaunchAtLogin";
-
-/* Menu image file name */
-
-NSString *gMenuImage = @"MenuCal.png";
-
-/* Helper app bundle name */
-
-NSString *gHelperAppBundle = @"org.calalum.ranga.MenuCalLaunchAtLoginHelper";
-
-/* Helper app termination message */
-
-NSString *gMsgTerminate = @"Terminate";
+#import "Prefs.h"
 
 @interface AppDelegate ()
 
@@ -70,7 +47,6 @@ NSString *gMsgTerminate = @"Terminate";
     (NSNotification *)aNotification
 {
     NSArray *apps = nil;
-    NSUserDefaults* defaults = nil;
     BOOL startedAtLogin = FALSE;
     
     /*
@@ -86,18 +62,24 @@ NSString *gMsgTerminate = @"Terminate";
     [self.statusItem setHighlightMode: YES];
     [self.statusItem setMenu: MCMenu];
 
+    /*
+        Create a preference group to share preferences with the login
+        helper app:
+        https://stackoverflow.com/questions/14014417/reading-nsuserdefaults-from-helper-app-in-the-sandbox
+     */
+    
+    MCDefaults = [[NSUserDefaults alloc] initWithSuiteName: gAppGroup];
+    
     /* Get the user's preferences for displaying the date, day, and time */
 
-    defaults = [NSUserDefaults standardUserDefaults];
-    
-    showDate = [defaults boolForKey: gPrefShowDate];
-    showDateShortStyle = [defaults boolForKey: gPrefShowDateShortStyle];
-    showFullMonth = [defaults boolForKey: gPrefShowFullMonth];
-    showDay = [defaults boolForKey: gPrefShowDay];
-    showYear = [defaults boolForKey: gPrefShowYear];
-    showTime = [defaults boolForKey: gPrefShowTime];
-    showTimeZone = [defaults boolForKey: gPrefShowTimeZone];
-    launchAtLogin = [defaults boolForKey: gPrefLaunchAtLogin];
+    showDate = [MCDefaults boolForKey: gPrefShowDate];
+    showDateShortStyle = [MCDefaults boolForKey: gPrefShowDateShortStyle];
+    showFullMonth = [MCDefaults boolForKey: gPrefShowFullMonth];
+    showDay = [MCDefaults boolForKey: gPrefShowDay];
+    showYear = [MCDefaults boolForKey: gPrefShowYear];
+    showTime = [MCDefaults boolForKey: gPrefShowTime];
+    showTimeZone = [MCDefaults boolForKey: gPrefShowTimeZone];
+    launchAtLogin = [MCDefaults boolForKey: gPrefLaunchAtLogin];
     
     /*
         Configure showColon to true so that the colon is initially seen when the
@@ -287,8 +269,7 @@ NSString *gMsgTerminate = @"Terminate";
 
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showDate
-                                            forKey: gPrefShowDate];
+    [MCDefaults setBool: showDate forKey: gPrefShowDate];
     
     /*
         Show a checkmark before this menu item if the date should be
@@ -325,8 +306,7 @@ NSString *gMsgTerminate = @"Terminate";
 
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showDateShortStyle
-                                            forKey: gPrefShowDateShortStyle];
+    [MCDefaults setBool: showDateShortStyle forKey: gPrefShowDateShortStyle];
 
     /*
         Show a checkmark before this menu item if the date should be
@@ -363,8 +343,7 @@ NSString *gMsgTerminate = @"Terminate";
     
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showFullMonth
-                                            forKey: gPrefShowFullMonth];
+    [MCDefaults setBool: showFullMonth forKey: gPrefShowFullMonth];
     
     /*
         Show a checkmark before this menu item if the date should be
@@ -390,8 +369,7 @@ NSString *gMsgTerminate = @"Terminate";
 
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showDay
-                                            forKey: gPrefShowDay];
+    [MCDefaults setBool: showDay forKey: gPrefShowDay];
 
     /*
         Show a checkmark before this menu item if the date should be
@@ -417,9 +395,8 @@ NSString *gMsgTerminate = @"Terminate";
     
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showYear
-                                            forKey: gPrefShowYear];
-    
+    [MCDefaults setBool: showYear forKey: gPrefShowYear];
+
     /*
      Show a checkmark before this menu item if the date should be
      shown in the menubar:
@@ -444,8 +421,7 @@ NSString *gMsgTerminate = @"Terminate";
 
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showTime
-                                            forKey: gPrefShowTime];
+    [MCDefaults setBool: showTime forKey: gPrefShowTime];
 
     /*
         Show a checkmark before this menu item if the time should be
@@ -480,9 +456,8 @@ NSString *gMsgTerminate = @"Terminate";
     
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: showTimeZone
-                                            forKey: gPrefShowTimeZone];
-    
+    [MCDefaults setBool: showTimeZone forKey: gPrefShowTimeZone];
+
     /*
         Show a checkmark before this menu item if the time should be
         shown in the menubar:
@@ -509,8 +484,7 @@ NSString *gMsgTerminate = @"Terminate";
     
     /* Update the user's preferences */
     
-    [[NSUserDefaults standardUserDefaults] setBool: launchAtLogin
-                                            forKey: gPrefLaunchAtLogin];
+    [MCDefaults setBool: launchAtLogin forKey: gPrefLaunchAtLogin];
 
     /*
         Show a checkmark before this menu item if we should launch at login:
