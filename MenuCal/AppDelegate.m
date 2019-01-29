@@ -35,6 +35,12 @@
 #import "AppDelegate.h"
 #import "Prefs.h"
 
+/* Constants */
+
+/* Menu image file name */
+
+NSString *gMenuImage = @"MenuCal.png";
+
 @interface AppDelegate ()
 
 @property (weak) IBOutlet NSWindow *window;

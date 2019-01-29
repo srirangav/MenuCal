@@ -25,15 +25,16 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     DEALINGS IN THE SOFTWARE.
 */
+
 #ifndef Prefs_h
 #define Prefs_h
 
 /* App bundle */
 
-NSString *gHelperAppBundle = @"org.calalum.ranga.MenuCalLaunchAtLoginHelper";
-NSString *gAppBundle = @"org.calalum.ranga.MenuCal";
 NSString *gAppName = @"MenuCal";
 NSString *gAppGroup = @"CLN8R9E6QM.org.calalum.ranga.MenuCalGroup";
+NSString *gAppBundle = @"org.calalum.ranga.MenuCal";
+NSString *gHelperAppBundle = @"org.calalum.ranga.MenuCalLaunchAtLoginHelper";
 
 /* User preferences */
 
@@ -45,10 +46,6 @@ NSString *gPrefShowYear = @"ShowYear";
 NSString *gPrefShowTime = @"ShowTime";
 NSString *gPrefShowTimeZone = @"ShowTimeZone";
 NSString *gPrefLaunchAtLogin = @"LaunchAtLogin";
-
-/* Menu image file name */
-
-NSString *gMenuImage = @"MenuCal.png";
 
 /* Helper app termination message */
 

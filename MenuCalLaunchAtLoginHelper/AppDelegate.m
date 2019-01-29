@@ -45,12 +45,12 @@ static int gDelayBeforeQuit = 15;
 {
     BOOL alreadyRunning = NO;
     BOOL isActive = NO;
+    BOOL launchAtLogin = YES;
     NSArray *running = nil;
     NSString *path = nil;
     NSString *newPath = nil;
     NSMutableArray *pathComponents = nil;
     NSUserDefaults *MCDefaults;
-    BOOL launchAtLogin;
     
     /*
         Create a preference group to share preferences with the login
